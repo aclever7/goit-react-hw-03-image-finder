@@ -6,7 +6,6 @@ import Button from './Button';
 import './App.css';
 import Modal from './Modal';
 import Loader from './Loader';
-import ReactLoading from 'react-loading';
 
 export class App extends Component {
   state = {
