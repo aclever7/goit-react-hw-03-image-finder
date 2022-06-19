@@ -6,7 +6,9 @@ import {
 
 export default function ImageGalleryItem({ image, onClick }) {
   return (
-    <ImageGalleryItemLi onClick={() => onClick(image.largeImageURL)}>
+    <ImageGalleryItemLi
+      onClick={() => onClick(image.largeImageURL, image.tags)}
+    >
       <ImageGalleryItemImage src={image.webformatURL} alt={image.tags} />
     </ImageGalleryItemLi>
   );

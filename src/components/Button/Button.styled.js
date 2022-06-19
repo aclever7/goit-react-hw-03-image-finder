@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 const LoadMoreButton = styled.button`
   padding: 8px 16px;
-  border-radius: 2px;
+  border-radius: 25px;
   background-color: #3f51b5;
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
@@ -23,6 +23,7 @@ const LoadMoreButton = styled.button`
   &:hover {
     background-color: #303f9f;
   }
+  margin: auto;
 `;
 
 export { LoadMoreButton };

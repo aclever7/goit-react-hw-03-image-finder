@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-const Overlay = styled.div`
+const OverlayDiv = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -13,9 +13,9 @@ const Overlay = styled.div`
   z-index: 1200;
 `;
 
-const Modal = styled.div`
+const ModalDiv = styled.div`
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
 `;
 
-export { Overlay, Modal };
+export { OverlayDiv, ModalDiv };

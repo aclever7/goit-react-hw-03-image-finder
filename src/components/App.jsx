@@ -4,6 +4,9 @@ import imagesApi from '../services/imagesApi';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
 import './App.css';
+import Modal from './Modal';
+import Loader from './Loader';
+import ReactLoading from 'react-loading';
 
 export class App extends Component {
   state = {
@@ -18,6 +21,7 @@ export class App extends Component {
     totalHits: 0,
     largeImageURL: '',
     showModal: false,
+    imgTags: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -36,13 +40,14 @@ export class App extends Component {
           openButton: false,
         });
       }
+
       imagesApi
         .fetchImages(nextName, this.state.limit, nextPage)
         .then(images => {
           if (!images.hits.length) {
             return this.setState({
               openButton: false,
-              status: 'error',
+              status: 'rejected',
             });
           }
 
@@ -64,9 +69,8 @@ export class App extends Component {
             }));
           }
         })
-        .catch(error => this.setState({ error: error, status: 'rejected' }));
+        .catch(error => this.setState({ error: error, status: 'error' }));
     }
-    console.log(this.state.status);
   }
 
   toggleModal = () => {
@@ -75,33 +79,59 @@ export class App extends Component {
     }));
   };
 
-  handleOpenModal = (largeImageURL = '') => {
-    this.setState({ largeImageURL });
+  handleOpenModal = (largeImageURL = '', imgTags = '') => {
+    this.setState({ largeImageURL, imgTags });
     this.toggleModal();
   };
 
   onChangeQuery = ({ query }) => {
-    this.setState({ query: query, page: 1, images: [], error: null });
+    this.setState({ query: query, page: 1, error: null });
   };
 
   loadMore = () => {
-    this.setState(({ page }) => ({
-      loading: true,
-      page: page + 1,
-    }));
+    this.setState(state => {
+      return {
+        page: state.page + 1,
+        loading: true,
+      };
+    });
   };
 
   render() {
-    const { images } = this.state;
+    const {
+      images,
+      largeImageURL,
+      imgTags,
+      showModal,
+      status,
+      openButton,
+      loading,
+      totalHits,
+      error,
+      query,
+    } = this.state;
 
     return (
       <div className="App">
         <Searchbar onSubmit={this.onChangeQuery} />
-        {this.state.status === 'rejected' && (
-          <h1>{this.state.error.massage}</h1>
+        {status === 'pending' && <Loader />}
+        {status === 'idle' && <h1>введите имя картинки в поле поиска</h1>}
+        {status === 'rejected' && (
+          <h1>изображения с названием "{query}" отсутсвуют</h1>
         )}
-        <ImageGallery images={images} onClick={this.handleOpenModal} />
-        <Button onClick={this.loadMore} />
+        {status === 'error' && <h1>{error.message}</h1>}
+        {status === 'resolved' && (
+          <ImageGallery images={images} onClick={this.handleOpenModal} />
+        )}
+        {showModal && (
+          <Modal showModal={this.handleOpenModal}>
+            <img src={largeImageURL} alt={imgTags} />
+          </Modal>
+        )}
+        {loading && <Loader />}
+        {openButton && !loading && images.length !== totalHits && (
+          <Button onClick={this.loadMore} />
+        )}
       </div>
     );
   }
