@@ -119,7 +119,7 @@ export class App extends Component {
           <h1>изображения с названием "{query}" отсутсвуют</h1>
         )}
         {status === 'error' && <h1>{error.message}</h1>}
-        {status === 'resolved' && (
+        {images && (
           <ImageGallery images={images} onClick={this.handleOpenModal} />
         )}
         {showModal && (
